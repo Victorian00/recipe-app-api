@@ -1,3 +1,48 @@
-from django.db import models
+"""
+Modelo del database
+"""
 
-# Create your models here.
+from django.db import models
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,   # POR EL AMOR DE DIOS, NI SE TE OCURRA PONERLE UNA R AL FINAL, PODRÍAS DESINTEGRAR EL UNIVERSO CONOCIDO Y ACABAR CON TODA LA VIDA EXISTENTE EN ÉL, DANDO COMO RESULTADO UN LUGAR QUE SERÍA CONOCIDO COMO "LA NADA" Y QUE NI LOS MEJORES CIENTÍFICOS SON CAPACES DE IMAGINAR, UN LUGAR FUERA DE NUESTRO PROPIO ENTENDIMIENTO.
+)                       # Es broma, solo no lo pongas porque no funciona, pero me tengo que inventar algo para darle vidilla a esto
+
+
+
+class UserManager(BaseUserManager):
+    'Gestor de usuarios'
+
+    def create_user(self, email, password=None, **extra_fields):
+        'Crear, guardar y devolver un nuevo usuario'
+        if not email:
+            raise ValueError('User must have an email address.')
+        user=self.model(email=self.normalize_email(email), **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def create_superuser(self, email, password):
+        'Crear y devolver un superuser'
+        user = self.create_user(email, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+
+        return user
+
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    'Usuario en el sistema'
+
+    email = models.EmailField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
