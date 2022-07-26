@@ -14,6 +14,7 @@ def create_user(email='user@example.com', password='testpass123'):
     'Crear y devolver un nuevo usuario'
     return get_user_model().objects.create_user(email, password)
 
+
 class ModelTest(TestCase):
     'Testeo del modelo'
 
@@ -84,7 +85,7 @@ class ModelTest(TestCase):
         user = create_user()
         ingredient = models.Ingredient.objects.create(
             user = user,
-            name = 'Ingredient1',
+            name = 'Ingredient1'
         )
 
         self.assertEqual(str(ingredient), ingredient.name)

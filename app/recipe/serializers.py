@@ -12,7 +12,7 @@ from core.models import (
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    'Serializador para ingredientes'
+    'Serializador para los ingredientes'
 
     class Meta:
         model = Ingredient
@@ -37,12 +37,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'time_minutes', 'price', 'link', 'tags']
         read_only_fields = ['id']
 
-class RecipeDetailSerializer(RecipeSerializer):
-    """Serializer for recipe detail view."""
-
-    class Meta(RecipeSerializer.Meta):
-        fields = RecipeSerializer.Meta.fields + ['description']
-
 
     def _get_or_create_tags(self, tags, recipe):
         'Útil para crear y conseguir tags como necesitemos'
@@ -58,7 +52,7 @@ class RecipeDetailSerializer(RecipeSerializer):
         'Crear una receta'
         tags = validated_data.pop('tags', [])
         recipe = Recipe.objects.create(**validated_data)
-        auth_user = self.context['request'].user
+
         self._get_or_create_tags(tags, recipe)
 
         return recipe
@@ -75,3 +69,9 @@ class RecipeDetailSerializer(RecipeSerializer):
 
         instance.save()
         return instance
+
+class RecipeDetailSerializer(RecipeSerializer):
+    """Serializer for recipe detail view."""
+
+    class Meta(RecipeSerializer.Meta):
+        fields = RecipeSerializer.Meta.fields + ['description']

@@ -3,17 +3,17 @@ name: Checks
 
 on: [push]
 
-jobs: 
+jobs:
   test-lint:
     name: Test and Lint
     runs-on: ubuntu-20.04
     steps:
-      - name: Login to Docker Hub (Ingresar a Docker Hub)
+      - name: Login to Docker Hub '(Ingresar a Docker Hub)'
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Checkout (Salir de Docker Hub)
+      - name: Checkout '(Salir de Docker Hub)'
         uses: actions/checkout@v2
       - name: Test
         run: docker-compose run --rm app sh -c "pythin manage.py wait_for_db && python manage.py test"

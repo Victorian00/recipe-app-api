@@ -30,8 +30,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         'Devuelve la clase del resializador para la petición'
-        if self.action == 'retrieve':
-            return serializers.RecipeDetailSerializer
+        if self.action == 'list':
+            return serializers.RecipeSerializer
 
         return self.serializer_class
 
@@ -56,13 +56,12 @@ class TagViewSet(mixins.DestroyModelMixin,
 
 
 class IngredientViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    'Administrar ingredientes en el database'
+    'Administrar los ingredientes en el dataset'
     serializer_class = serializers.IngredientSerializer
     queryset = Ingredient.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get_quetyset(self):
-        'Filtrar consultas para autehticar al usuario'
+    def get_queryset(self):
+        'Filtrar consultas para el usuario autenticado'
         return self.queryset.filter(user=self.request.user).order_by('-name')
-

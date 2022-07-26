@@ -1,7 +1,6 @@
 """
-Test para los ingredientes de la API
+Tests for the ingredients API.
 """
-
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase
@@ -18,25 +17,25 @@ INGREDIENTS_URL = reverse('recipe:ingredient-list')
 
 
 def create_user(email='user@example.com', password='testpass123'):
-    'Crear y devolver un usuario'
+    """Create and return user."""
     return get_user_model().objects.create_user(email=email, password=password)
 
 
 class PublicIngredientsApiTests(TestCase):
-    'Test para peticiones no autenticadas de la API'
+    """Test unauthenticated API requests."""
 
     def setUp(self):
         self.client = APIClient()
 
     def test_auth_required(self):
-        'Test para la autenticación requerida para recuperar los ingredientes'
+        """Test auth is required for retrieving ingredients."""
         res = self.client.get(INGREDIENTS_URL)
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class PrivateIngredientsApiTest(TestCase):
-    'Test para peticiones no autenticadas de la API'
+class PrivateIngredientsApiTests(TestCase):
+    """Test authenticated API requests."""
 
     def setUp(self):
         self.user = create_user()
@@ -44,7 +43,7 @@ class PrivateIngredientsApiTest(TestCase):
         self.client.force_authenticate(self.user)
 
     def test_retrieve_ingredients(self):
-        'Test para recuperar una lista de ingredientes'
+        """Test retrieving a list of ingredients."""
         Ingredient.objects.create(user=self.user, name='Kale')
         Ingredient.objects.create(user=self.user, name='Vanilla')
 
@@ -56,7 +55,7 @@ class PrivateIngredientsApiTest(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_ingredients_limited_to_user(self):
-        'Test de la lista de ingredientes está limitada a usuarios autenticados'
+        """Test list of ingredients is limited to authenticated user."""
         user2 = create_user(email='user2@example.com')
         Ingredient.objects.create(user=user2, name='Salt')
         ingredient = Ingredient.objects.create(user=self.user, name='Pepper')
@@ -67,4 +66,3 @@ class PrivateIngredientsApiTest(TestCase):
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['name'], ingredient.name)
         self.assertEqual(res.data[0]['id'], ingredient.id)
-
