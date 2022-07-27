@@ -199,7 +199,7 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Recipe.objects.filter(id=recipe.id).exists())
 
-    def test_delete_other_users_recipe_error(self):
+    def test_recipe_other_users_recipe_error(self):
         'Test para cuando intentas borrar la receta de otro usuario te da error'
         new_user = create_user(email='user2@example.com', password='test123')
         recipe = create_recipe(user=new_user)
@@ -347,7 +347,7 @@ class PrivateRecipeApiTests(TestCase):
             self.assertTrue(exists)
 
 
-    def test_create_ingredient_when_updating_a_recipe(self):
+    def test_create_ingredient_on_updating_a_recipe(self):
         'Test para crear un ingrediente cuando se actualiza una receta'
         recipe = create_recipe(user=self.user)
 
@@ -428,14 +428,14 @@ class PrivateRecipeApiTests(TestCase):
         self.assertNotIn(s3.data, res.data)
 
 
-class ImageUploadTest(TestCase):
+class ImageUploadTests(TestCase):
     'Test for the image upload API'
 
     def setUp(self):
         self.client = APIClient()
         self.user = get_user_model().objects.create_user(
-            'user@example.com'
-            'password123'
+            'user@example.com',
+            'password123',
         )
         self.client.force_authenticate(self.user)
         self.recipe = create_recipe(user=self.user)

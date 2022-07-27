@@ -112,7 +112,7 @@ class PRivateTagsApiTests(TestCase):
         )
         recipe.tags.add(tag1)
 
-        res = self.client.get(TAGS_URL, {'solo_asignado': 1})
+        res = self.client.get(TAGS_URL, {'assigned_only': 1})
 
         s1 = TagSerializer(tag1)
         s2 = TagSerializer(tag2)
@@ -138,6 +138,6 @@ class PRivateTagsApiTests(TestCase):
         recipe1.tags.add(tag)
         recipe2.tags.add(tag)
 
-        res = self.client.get(TAGS_URL, {'solo_asignado': 1})
+        res = self.client.get(TAGS_URL, {'assigned_only': 1})
 
         self.assertEqual(len(res.data), 1)
