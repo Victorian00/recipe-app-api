@@ -93,22 +93,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_200_OK)
 
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-
-
-@extend_schema_view(
-    list = extend_schema(
-        parameters = [
-            OpenApiParameter(
-                'solo_asignados',
-                OpenApiTypes.INT, enum = [0, 1],
-                description = 'Filtrar por items asignados a las recetas',
-            )
-        ]
-    )
-)
 
 
 class BaseRecipeAttrViewSet(mixins.DestroyModelMixin,
@@ -121,16 +108,7 @@ class BaseRecipeAttrViewSet(mixins.DestroyModelMixin,
 
     def get_queryset(self):
         'Filtro para usuarios autenticados'
-        assigned_only = bool(
-            int(self.request.query_params.get('solo_asignados', 0))
-        )
-        queryset = self.queryset
-        if assigned_only:
-            queryset = queryset.filter(recipe__isnull=False)
-
-        return queryset.filter(
-            user=self.request.user
-        ).order_by('-name').distinct()
+        return self.queryset.filter(user=self.request.user).order_by('-name')
 
 
 class TagViewSet(BaseRecipeAttrViewSet):

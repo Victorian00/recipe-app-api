@@ -114,14 +114,14 @@ class PrivateIngredientsApiTests(TestCase):
         )
         recipe.ingredients.add(in1)
 
-        res = self.client.get(INGREDIENTS_URL, {'solo_asignados': 1})
+        res = self.client.get(INGREDIENTS_URL, {'assigned_only': 1})
 
         s1 = IngredientSerializer(in1)
         s2 = IngredientSerializer(in2)
         self.assertIn(s1.data, res.data)
         self.assertNotIn(s2.data, res.data)
 
-    def  test_filteres_ingredients_unique(self):
+    def  test_filtered_ingredients_unique(self):
         'Test que al fintrar los ingredientes te devuelve una lista única sin ingredientes repetidos'
         ing = Ingredient.objects.create(user=self.user, name='Eggs')
         Ingredient.objects.create(user=self.user, name='Lentils')
