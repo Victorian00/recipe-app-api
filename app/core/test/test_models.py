@@ -64,12 +64,12 @@ class ModelTest(TestCase):
             'test@example.com',
             'testpass123',
         )
-        recipe=models.Recipe.objects.create(
+        recipe = models.Recipe.objects.create(
             user = user,
             title = 'Sample recipe name',
             time_minutes = 5,
             price = Decimal('5.50'),
-            description = 'Sample recipe description',
+            description = 'Sample receipe description',
         )
 
         self.assertEqual(str(recipe), recipe.title)

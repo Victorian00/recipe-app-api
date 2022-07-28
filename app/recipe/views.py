@@ -39,7 +39,7 @@ from recipe import serializers
                 'ingredients',
                 OpenApiTypes.STR,
                 description = 'Se usa la coma que separa la lista de ingredientes para filtrar',
-            )
+            ),
         ]
     )
 )
@@ -93,9 +93,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.errors, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @extend_schema_view(
     list=extend_schema(

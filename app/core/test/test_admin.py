@@ -22,7 +22,7 @@ class AdminSiteTests(TestCase):
         self.user = get_user_model().objects.create_user(
             email='user@example.com',
             password='testpassuser123',
-            name='Test User',
+            name='Test User'
         )
 
     def test_user_list(self):
